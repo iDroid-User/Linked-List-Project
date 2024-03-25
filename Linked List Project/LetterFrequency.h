@@ -43,7 +43,7 @@ class LetterFrequencyList {
             // Add a recursive function that deletes from the END of the list to the FRONT
             delist(head);
 
-            cout << "Done destroying list\n";
+            cout << "List is destroyed.\n";
             head = nullptr;
         }
 
@@ -74,6 +74,11 @@ class LetterFrequencyList {
                 head = new LetterNode(letter); // Inserts the first node of the sorted list
                 return true; // Indicates that a new node was added
             }
+            // If the node IS on the list
+            else if (foundNode->getLetter() == letter) {
+                foundNode->increaseFrequency();
+                return false; // Indicates that a new node wasn't added
+            }
             else if (foundNode->getLetter() != letter) {
                 if (letter > foundNode->getLetter()) {
                     if (foundNode->getNext() == nullptr) { // Worst-case scenario, the last node is returned to foundNode
@@ -102,11 +107,6 @@ class LetterFrequencyList {
                     }
                 }
             }
-            // If the node IS on the list
-            else {
-                foundNode->increaseFrequency();
-                return false; // Indicates that a new node wasn't added
-            }
         }
 
         int getFrequency(char letter) {
@@ -121,15 +121,28 @@ class LetterFrequencyList {
 
         bool remove(char letter) { // Complete
             LetterNode *removeHere = head;
+            LetterNode *tmp = nullptr;
             // If the letter is found
+            if (nullptr == head->getLetter()) {
+                cout << "Empty list." << endl;
+                return false; // Empty list
+            } else if (letter == head->getLetter()) {
+                tmp = head;
+                head = head->getNext(); // Reassigns head
+                delete tmp;
+                tmp = nullptr;
+                return true; // The letter was found and removed
+            }
+            
             while (removeHere->getNext() != nullptr) {
                 if (removeHere->getNext()->getLetter() == letter) {
-                    LetterNode *tmp = removeHere->getNext();
+                    tmp = removeHere->getNext();
                     removeHere->setNext(removeHere->getNext()->getNext()); // Fills the gap
-                    tmp->~LetterNode();
-                    return true; // The letter was found and removed
+                    delete tmp;
+                    tmp = nullptr;
+                    return true;
                 }
-                    removeHere = removeHere->getNext();
+                removeHere = removeHere->getNext();
             }
             // If the letter ISN'T in the list
             return false;
@@ -137,7 +150,7 @@ class LetterFrequencyList {
 
         void print() {
             if (nullptr == head) {
-                cout << "Empty list" << endl;
+                cout << "Empty list." << endl;
             }
             else {
                 LetterNode *printHere = head;
@@ -149,7 +162,7 @@ class LetterFrequencyList {
             }
         }
 
-        LetterNode *find(char letter) { // Completed
+        LetterNode *find(char letter) const { // Completed
             // Given a capitalized letter
             if (nullptr == head) {
                 return nullptr; // Empty list
@@ -184,7 +197,7 @@ class LetterFrequencyList {
         }
 
         LetterNode *alphabetize(char letter) {
-            LetterNode *alphaBet = head;
+            LetterNode *alphaBet = head; // Saves the current node
             LetterNode *preNode = nullptr; // Saves the previous node
             LetterNode *amazon = nullptr;
             while (alphaBet != nullptr) {
