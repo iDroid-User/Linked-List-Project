@@ -1,4 +1,4 @@
-# Linked-List-Project
+# Letter-Frequency-Counter
 A CSCI 2 assignment
 
 This algorithm counts the frequency of letters in a text file fed to it. The data structure of choice to count letters was the **singly linked list**.
